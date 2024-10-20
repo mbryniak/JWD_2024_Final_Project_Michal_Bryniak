@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dodaj odczyt</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #007BFF;
+            padding: 10px 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            margin-top: auto;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/records">Twoje wyniki</a></li>
+            <li><a href="/records/chart">Wykres</a></li>
+            <li><a href="/records/new">Wprowadź odczyt glikemii</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h1>Dodaj nowy odczyt glikemii</h1>
+
+    <form th:action="@{/records/add}" th:object="${record}" method="post">
+        <label>Imię:
+            <input type="text" th:field="*{name}" required pattern="[A-Za-z]+" title="Proszę wprowadzić tylko litery bez spacji"/>
+        </label><br/>
+        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+
+        <label>Odczyt:
+            <input type="number" th:field="*{reading}" required step="1" min="50" max="500" title="Prosze wprowadzić odczyt glikemii w zakresie od 50 do 500"/>
+        </label><br/>
+        <span class="error" th:if="${#fields.hasErrors('reading')}" th:errors="*{reading}">Reading Error</span>
+
+        <label for="name">Pora odczytu glikemii:</label>
+        <select id="name" th:field="*{bmi}" required>
+            <option value="wybierz porę odczytu" selected disabled>Wybierz porę odczytu</option>
+            <option value="rano - przed posiłkiem">rano - przed posiłkiem</option>
+            <option value="rano - po posiłku">rano - po posiłku</option>
+            <option value="dzień - przed posiłkiem">dzień - przed posiłkiem</option>
+            <option value="dzień - po posiłku">dzień - po posiłku</option>
+            <option value="wieczór - przed posiłkiem">wieczór - przed posiłkiem</option>
+            <option value="wieczór - po posiłku">wieczór - po posiłku</option>
+        </select>
+        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{bmi}">Please select a name</span>
+
+        <button type="submit">Dodaj nowy wpis</button>
+    </form>
+</main>
+
+<footer>
+    <p>© 2024 GlucoProfile Application. All rights reserved.</p>
+</footer>
+</body>
+</html>

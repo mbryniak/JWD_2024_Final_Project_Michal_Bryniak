@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gluco Profile - Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #007BFF; /* niebieski pasek */
+            padding: 10px 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        li {
+            margin-left: 20px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none; /
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/records">Twoje wyniki</a></li>
+            <li><a href="/records/chart">Wykres</a></li>
+            <li><a href="/records/new">Wprowadź odczyt glikemii</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h2>Witamy w aplikacji GlucoProfile</h2>
+    <p>Monitoruj swój poziom glikemii i zarządzaj swoją cukrzycą.</p>
+</main>
+
+<footer>
+    <p>© 2024 GlucoProfile Application. All rights reserved.</p>
+</footer>
+</body>
+</html>

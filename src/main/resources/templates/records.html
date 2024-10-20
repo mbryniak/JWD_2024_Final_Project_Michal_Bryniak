@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gluco Readings</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #007BFF;
+            padding: 10px 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            margin-top: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/records">Twoje wyniki</a></li>
+            <li><a href="/records/chart">Wykres</a></li>
+            <li><a href="/records/new">Wprowadź odczyt glikemii</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h1>Twoje wyniki</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Odczyt</th>
+            <th>Pora odczytu</th>
+            <th>Data</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="record : ${records}">
+
+            <td th:text="${record.name}"></td>
+            <td th:text="${record.reading}"></td>
+            <td th:text="${record.bmi}"></td>
+            <td th:text="${record.dateTime != null ? #temporals.format(record.dateTime, 'dd-MM-yyyy HH:mm:ss') : 'N/A'}"></td>
+
+        </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>© 2024 GlucoProfile Application. All rights reserved.</p>
+    </footer>
+
+    </body>
+    </html>

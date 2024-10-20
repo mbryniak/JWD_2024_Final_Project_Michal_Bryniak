@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wykres Glikemii</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        header {
+            background-color: #007BFF;
+            padding: 10px 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        li {
+            margin-left: 20px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden;
+        }
+
+        #bmiChart {
+            width: 100% !important;
+            height: 400px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/records">Twoje wyniki</a></li>
+            <li><a href="/records/chart">Wykres</a></li>
+            <li><a href="/records/new">Wprowadź odczyt glikemii</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h1>Średni poziom glikemii wg. pory odczytu</h1>
+
+    <label for="nameSelect">Wybierz osobę:</label>
+    <select id="nameSelect">
+        <option value="all">Wszyscy</option>
+
+    </select>
+
+    <div class="chart-container">
+        <canvas id="bmiChart"></canvas>
+    </div>
+</main>
+
+<script>
+    let bmiChart;
+    let allData = [];
+    const nameSelect = document.getElementById('nameSelect');
+
+    const bmiCategories = [
+        'rano - przed posiłkiem',
+        'rano - po posiłku',
+        'dzień - przed posiłkiem',
+        'dzień - po posiłku',
+        'wieczór - przed posiłkiem',
+        'wieczór - po posiłku'
+    ];
+
+    function updateChart(selectedName) {
+        const bmiData = {};
+
+        const filteredData = selectedName === 'all' ? allData : allData.filter(record => record.name === selectedName);
+
+        filteredData.forEach(record => {
+            const bmi = record.bmi;
+            const reading = record.reading;
+
+            if (bmiData[bmi]) {
+                bmiData[bmi].totalReading += reading;
+                bmiData[bmi].count += 1;
+            } else {
+                bmiData[bmi] = { totalReading: reading, count: 1 };
+            }
+        });
+
+        const averageReadings = bmiCategories.map(bmi => {
+            if (bmiData[bmi]) {
+                return (bmiData[bmi].totalReading / bmiData[bmi].count).toFixed(2);
+            } else {
+                return '0.00';
+            }
+        });
+
+        const backgroundColors = averageReadings.map(avg => {
+            const averageValue = parseFloat(avg);
+            return averageValue < 70 || averageValue > 180
+                ? 'rgba(255, 99, 132, 1)'
+                : 'rgba(75, 192, 192, 1)';
+        });
+
+        if (bmiChart) {
+            bmiChart.destroy();
+        }
+
+        const ctx = document.getElementById('bmiChart').getContext('2d');
+        bmiChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: bmiCategories,
+                datasets: [{
+                    label: 'Średni zagregowany poziom glikemii [mg/dL] zielony: w porządku /czerwony: konsultacja lekarska',
+                    data: averageReadings,
+                    backgroundColor: backgroundColors,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 500,
+                        title: {
+                            display: true,
+                            text: 'średni poziom glikemii [mg/dL]'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'pora odczytu glikemii [przed/po posiłku]'
+                        }
+                    }
+                },
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            line70: {
+                                type: 'line',
+                                yMin: 70,
+                                yMax: 70,
+                                borderColor: 'black',
+                                borderWidth: 1,
+                                borderDash: [6, 6],
+                                label: {
+                                    content: '70 mg/dL',
+                                    enabled: true,
+                                    position: 'end'
+                                }
+                            },
+                            line180: {
+                                type: 'line',
+                                yMin: 180,
+                                yMax: 180,
+                                borderColor: 'black',
+                                borderWidth: 1,
+                                borderDash: [6, 6],
+                                label: {
+                                    content: '180 mg/dL',
+                                    enabled: true,
+                                    position: 'end'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    fetch('/records/chart/data')
+        .then(response => response.json())
+        .then(data => {
+            allData = data;
+
+            const uniqueNames = [...new Set(data.map(record => record.name))];
+            uniqueNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                nameSelect.appendChild(option);
+            });
+
+            updateChart('all');
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+    nameSelect.addEventListener('change', () => {
+        const selectedName = nameSelect.value;
+        updateChart(selectedName);
+    });
+</script>
+
+<footer>
+    <p>© 2024 GlucoProfile Application. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
