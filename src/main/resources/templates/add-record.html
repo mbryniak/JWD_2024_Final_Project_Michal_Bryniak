@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-
-
         html, body {
             height: 100%;
             margin: 0;
@@ -63,6 +61,35 @@
             color: red;
         }
     </style>
+
+    <script>
+        function handleNameSelection() {
+            const nameSelect = document.getElementById('nameSelect');
+            const nameInput = document.getElementById('nameInput');
+
+            if (nameSelect.value) {
+
+                nameInput.value = '';
+                nameInput.disabled = true;
+            } else {
+                nameInput.disabled = false;
+            }
+        }
+
+        function handleNameInput() {
+            const nameSelect = document.getElementById('nameSelect');
+            const nameInput = document.getElementById('nameInput');
+
+            if (nameInput.value) {
+
+                nameSelect.value = '';
+                nameSelect.disabled = true;
+            } else {
+                nameSelect.disabled = false;
+            }
+        }
+    </script>
+
 </head>
 
 <body>
@@ -81,19 +108,32 @@
     <h1>Dodaj nowy odczyt glikemii</h1>
 
     <form th:action="@{/records/add}" th:object="${record}" method="post">
-        <label>Imię:
-            <input type="text" th:field="*{name}" required pattern="[A-Za-z]+" title="Proszę wprowadzić tylko litery bez spacji"/>
+
+
+        <label>Wybierz zarejestrowane już imię:
+            <select id="nameSelect" th:field="*{name}" onchange="handleNameSelection()">
+                <option value="" disabled selected>Wybierz istniejące imię lub wpisz nowe</option>
+                <option th:each="name : ${existingNames}" th:value="${#strings.trim(name)}"
+                        th:text="${#strings.trim(name)}"></option>
+            </select>
+        </label><br/>
+
+
+        <label>Zarejestruj imię po raz pierwszy:
+            <input type="text" id="nameInput" th:field="*{name}" pattern="[A-Za-z]+" oninput="handleNameInput()"
+                   title="Proszę wprowadzić tylko litery bez spacji"/>
         </label><br/>
         <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
 
         <label>Odczyt:
-            <input type="number" th:field="*{reading}" required step="1" min="50" max="500" title="Prosze wprowadzić odczyt glikemii w zakresie od 50 do 500"/>
+            <input type="number" th:field="*{reading}" required step="1" min="50" max="500"
+                   title="Prosze wprowadzić odczyt glikemii w zakresie od 50 do 500"/>
         </label><br/>
         <span class="error" th:if="${#fields.hasErrors('reading')}" th:errors="*{reading}">Reading Error</span>
 
-        <label for="name">Pora odczytu glikemii:</label>
-        <select id="name" th:field="*{bmi}" required>
-            <option value="wybierz porę odczytu" selected disabled>Wybierz porę odczytu</option>
+        <label for="bmi">Pora odczytu glikemii:</label>
+        <select id="bmi" th:field="*{bmi}" required>
+            <option value="" disabled selected>Wybierz porę odczytu</option>
             <option value="rano - przed posiłkiem">rano - przed posiłkiem</option>
             <option value="rano - po posiłku">rano - po posiłku</option>
             <option value="dzień - przed posiłkiem">dzień - przed posiłkiem</option>
@@ -101,7 +141,7 @@
             <option value="wieczór - przed posiłkiem">wieczór - przed posiłkiem</option>
             <option value="wieczór - po posiłku">wieczór - po posiłku</option>
         </select>
-        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{bmi}">Please select a name</span>
+        <span class="error" th:if="${#fields.hasErrors('bmi')}" th:errors="*{bmi}">Please select a time</span>
 
         <button type="submit">Dodaj nowy wpis</button>
     </form>

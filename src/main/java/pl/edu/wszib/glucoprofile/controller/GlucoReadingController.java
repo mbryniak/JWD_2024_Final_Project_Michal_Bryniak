@@ -35,6 +35,8 @@ public class GlucoReadingController {
     // Formularz do wprowadzenia nowego wpisu
     @GetMapping("/new")
     public String showAddRecordForm(Model model) {
+        List<String> existingNames = glucoInputsService.getAllNames();
+        model.addAttribute("existingNames", existingNames);
         model.addAttribute("record", new GlucoReading());
         return "add-record";
     }
@@ -42,6 +44,9 @@ public class GlucoReadingController {
     // Rejestrowanie wpisu
     @PostMapping("/add")
     public String addRecord(@ModelAttribute("record") GlucoReading record) {
+        if (record.getName() != null) {
+            record.setName(record.getName().trim().replaceAll(",$", ""));
+        }
         record.setDateTime(LocalDateTime.now());
         glucoInputsService.saveRecord(record);
         return "redirect:/records";
