@@ -40,7 +40,6 @@ public class GlucoReadingController {
         model.addAttribute("record", new GlucoReading());
         return "add-record";
     }
-
     // Rejestrowanie wpisu
     @PostMapping("/add")
     public String addRecord(@ModelAttribute("record") GlucoReading record) {

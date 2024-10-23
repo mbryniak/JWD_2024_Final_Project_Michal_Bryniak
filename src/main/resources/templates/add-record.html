@@ -97,53 +97,54 @@
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/records">Twoje wyniki</a></li>
-            <li><a href="/records/chart">Wykres</a></li>
-            <li><a href="/records/new">Wprowadź odczyt glikemii</a></li>
+            <li><a href="/records">Twoje wyniki / Your results</a></li>
+            <li><a href="/records/chart">Wykres / Chart</a></li>
+            <li><a href="/records/new">Wprowadź odczyt glikemii / Register your readings</a></li>
         </ul>
     </nav>
 </header>
 
 <main>
-    <h1>Dodaj nowy odczyt glikemii</h1>
+    <h1>Dodaj nowy odczyt glikemii / Register your reading</h1>
 
     <form th:action="@{/records/add}" th:object="${record}" method="post">
 
 
-        <label>Wybierz zarejestrowane już imię:
+        <label>Wybierz zarejestrowane już imię / Choose registered name:
             <select id="nameSelect" th:field="*{name}" onchange="handleNameSelection()">
-                <option value="" disabled selected>Wybierz istniejące imię lub wpisz nowe</option>
+                <option value="" disabled selected>Wybierz istniejące imię / Choose registered name</option>
                 <option th:each="name : ${existingNames}" th:value="${#strings.trim(name)}"
                         th:text="${#strings.trim(name)}"></option>
             </select>
         </label><br/>
 
 
-        <label>Zarejestruj imię po raz pierwszy:
-            <input type="text" id="nameInput" th:field="*{name}" pattern="[A-Za-z]+" oninput="handleNameInput()"
-                   title="Proszę wprowadzić tylko litery bez spacji"/>
+        <label>Zarejestruj imię po raz pierwszy / Register new name:
+            <input type="text" id="nameInput" required minlength="1" th:field="*{name}" pattern="[A-Za-z]+" oninput="handleNameInput()"
+                               title="Proszę wprowadzić tylko litery bez spacji / Only letters available - no space"/>
+
         </label><br/>
         <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
 
-        <label>Odczyt:
+        <label>Odczyt / Reading in [mg/dL]:
             <input type="number" th:field="*{reading}" required step="1" min="50" max="500"
-                   title="Prosze wprowadzić odczyt glikemii w zakresie od 50 do 500"/>
+                   title="Prosze wprowadzić odczyt glikemii w zakresie od 50 do 500 / Please input readings from 50 to 500 only"/>
         </label><br/>
         <span class="error" th:if="${#fields.hasErrors('reading')}" th:errors="*{reading}">Reading Error</span>
 
-        <label for="bmi">Pora odczytu glikemii:</label>
+        <label for="bmi">Pora odczytu glikemii / Reading period:</label>
         <select id="bmi" th:field="*{bmi}" required>
             <option value="" disabled selected>Wybierz porę odczytu</option>
-            <option value="rano - przed posiłkiem">rano - przed posiłkiem</option>
-            <option value="rano - po posiłku">rano - po posiłku</option>
-            <option value="dzień - przed posiłkiem">dzień - przed posiłkiem</option>
-            <option value="dzień - po posiłku">dzień - po posiłku</option>
-            <option value="wieczór - przed posiłkiem">wieczór - przed posiłkiem</option>
-            <option value="wieczór - po posiłku">wieczór - po posiłku</option>
+            <option value="rano - przed posiłkiem">rano - przed posiłkiem / morning - before meal</option>
+            <option value="rano - po posiłku">rano - po posiłku / morning - after meal</option>
+            <option value="dzień - przed posiłkiem">dzień - przed posiłkiem / day - before meal</option>
+            <option value="dzień - po posiłku">dzień - po posiłku / day - after meal</option>
+            <option value="wieczór - przed posiłkiem">wieczór - przed posiłkiem / evening - before meal</option>
+            <option value="wieczór - po posiłku">wieczór - po posiłku / evening - after meal</option>
         </select>
         <span class="error" th:if="${#fields.hasErrors('bmi')}" th:errors="*{bmi}">Please select a time</span>
 
-        <button type="submit">Dodaj nowy wpis</button>
+        <button type="submit">Dodaj nowy wpis / New record</button>
     </form>
 </main>
 

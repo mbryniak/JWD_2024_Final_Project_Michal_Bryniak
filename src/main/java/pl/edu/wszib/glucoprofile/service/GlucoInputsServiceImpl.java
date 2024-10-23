@@ -12,9 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class GlucoInputsServiceImpl implements GlucoInputsService {
-
     private final GlucoReadingRepository glucoReadingRepository;
-
     @Autowired
     public GlucoInputsServiceImpl(GlucoReadingRepository glucoReadingRepository) {
         this.glucoReadingRepository = glucoReadingRepository;
@@ -23,7 +21,6 @@ public class GlucoInputsServiceImpl implements GlucoInputsService {
     public List<GlucoReading> getAllRecords() {
         return glucoReadingRepository.findAll();
     }
-
     @Override
     public void saveRecord(GlucoReading glucoReading) {
         glucoReadingRepository.save(glucoReading);
@@ -71,4 +68,3 @@ public class GlucoInputsServiceImpl implements GlucoInputsService {
         return glucoReadingRepository.findAverageReadingForAllNames();
     }
 }
-
