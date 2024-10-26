@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-
-
         html, body {
             height: 100%;
             margin: 0;
@@ -59,10 +57,16 @@
             margin-top: auto;
         }
 
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
 
         th, td {
@@ -74,6 +78,9 @@
         th {
             background-color: #007BFF;
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
 
         .error {
@@ -97,31 +104,30 @@
 <main>
     <h1>Twoje wyniki / Your results</h1>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Imię / Name</th>
-            <th>Odczyt / Reading [mg/dL]</th>
-            <th>Pora odczytu / Period of reading</th>
-            <th>Data / Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="record : ${records}">
-
-            <td th:text="${record.name}"></td>
-            <td th:text="${record.reading}"></td>
-            <td th:text="${record.bmi}"></td>
-            <td th:text="${record.dateTime != null ? #temporals.format(record.dateTime, 'dd-MM-yyyy HH:mm:ss') : 'N/A'}"></td>
-
-        </tr>
+      <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Imię / Name</th>
+                <th>Odczyt / Reading [mg/dL]</th>
+                <th>Pora odczytu / Period of reading</th>
+                <th>Data / Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="record : ${records}">
+                <td th:text="${record.name}"></td>
+                <td th:text="${record.reading}"></td>
+                <td th:text="${record.bmi}"></td>
+                <td th:text="${record.dateTime != null ? #temporals.format(record.dateTime, 'dd-MM-yyyy HH:mm:ss') : 'N/A'}"></td>
+            </tr>
             </tbody>
         </table>
-    </main>
+    </div>
+</main>
 
-    <footer>
-        <p>© 2024 GlucoProfile Application. All rights reserved.</p>
-    </footer>
-
-    </body>
-    </html>
+<footer>
+    <p>© 2024 GlucoProfile Application by JAVA131 (MB). All rights reserved.</p>
+</footer>
+</body>
+</html>

@@ -112,7 +112,7 @@
 
         <label>Wybierz zarejestrowane już imię / Choose registered name:
             <select id="nameSelect" th:field="*{name}" onchange="handleNameSelection()">
-                <option value="" disabled selected>Wybierz istniejące imię / Choose registered name</option>
+                <option value="" selected disabled hidden>Wybierz istniejące imię / Choose registered name</option>
                 <option th:each="name : ${existingNames}" th:value="${#strings.trim(name)}"
                         th:text="${#strings.trim(name)}"></option>
             </select>
@@ -120,8 +120,10 @@
 
 
         <label>Zarejestruj imię po raz pierwszy / Register new name:
-            <input type="text" id="nameInput" required minlength="1" th:field="*{name}" pattern="[A-Za-z]+" oninput="handleNameInput()"
-                               title="Proszę wprowadzić tylko litery bez spacji / Only letters available - no space"/>
+            <input type="text" id="nameInput" required minlength="1" th:field="*{name}"
+                   pattern="[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+" oninput="handleNameInput()"
+
+                   title="Proszę wprowadzić tylko litery bez spacji / Only letters available - no space"/>
 
         </label><br/>
         <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
@@ -149,7 +151,7 @@
 </main>
 
 <footer>
-    <p>© 2024 GlucoProfile Application. All rights reserved.</p>
+    <p>© 2024 GlucoProfile Application by JAVA131 (MB). All rights reserved.</p>
 </footer>
 </body>
 </html>
